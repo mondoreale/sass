@@ -1972,7 +1972,7 @@ module Sass::Script
       return hash if hash.empty?
 
       fn_name = Sass::Util.caller_info.last.gsub('_', '-')
-      Sass::Util.sass_warn <<WARNING
+      Sass::Util.sass_warn <<WARNING + environment.stack.to_s.gsub(/^/, '        ')
 DEPRECATION WARNING: Passing lists of pairs to #{fn_name} is deprecated and will
 be removed in future versions of Sass. Use Sass maps instead. For details, see
 http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#maps.

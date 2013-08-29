@@ -41,7 +41,7 @@ class Sass::Tree::Visitors::Perform < Sass::Tree::Visitors::Base
     splat_sep = :comma
     if splat
       args += splat.to_a
-      splat_sep = splat.separator if splat.is_a?(Sass::Script::Value::List)
+      splat_sep = splat.separator
       # If the splat argument exists, there won't be any keywords passed in
       # manually, so we can safely overwrite rather than merge here.
       keywords = splat.keywords if splat.is_a?(Sass::Script::Value::ArgList)

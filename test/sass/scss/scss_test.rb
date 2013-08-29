@@ -1074,6 +1074,19 @@ CSS
 SCSS
   end
 
+  def test_mixin_keyword_splat_must_have_string_keys
+    assert_raise_message(Sass::SyntaxError, <<MESSAGE) {render <<SCSS}
+Variable keyword argument map must have string keys.
+12 is not a string in (12: 1).
+MESSAGE
+@mixin foo($a) {
+  a: $a;
+}
+
+.foo {@include foo((12: 1)...)}
+SCSS
+  end
+
   def test_mixin_var_args_with_keyword
     assert_raise_message(Sass::SyntaxError, "Positional arguments must come before keyword arguments.") {render <<SCSS}
 @mixin foo($a, $b...) {
@@ -1358,6 +1371,21 @@ CSS
 SCSS
   end
 
+  def test_function_list_of_pairs_splat_treated_as_list
+    assert_equal <<CSS, render(<<SCSS)
+.foo {
+  val: "a: a 1, b: b 2, c: c 3"; }
+CSS
+@function foo($a, $b, $c) {
+  @return "a: \#{$a}, b: \#{$b}, c: \#{$c}";
+}
+
+.foo {
+  val: foo((a 1, b 2, c 3)...);
+}
+SCSS
+  end
+
   def test_function_var_args_with_keyword
     assert_raise_message(Sass::SyntaxError, "Positional arguments must come before keyword arguments.") {render <<SCSS}
 @function foo($a, $b...) {
@@ -1437,18 +1465,16 @@ SCSS
 SCSS
   end
 
-  def test_function_list_of_pairs_splat_treated_as_list
-    assert_equal <<CSS, render(<<SCSS)
-.foo {
-  val: "a: a 1, b: b 2, c: c 3"; }
-CSS
-@function foo($a, $b, $c) {
-  @return "a: \#{$a}, b: \#{$b}, c: \#{$c}";
+  def test_function_keyword_splat_must_have_string_keys
+    assert_raise_message(Sass::SyntaxError, <<MESSAGE) {render <<SCSS}
+Variable keyword argument map must have string keys.
+12 is not a string in (12: 1).
+MESSAGE
+@function foo($a) {
+  @return $a;
 }
 
-.foo {
-  val: foo((a 1, b 2, c 3)...);
-}
+.foo {val: foo((12: 1)...)}
 SCSS
   end
 

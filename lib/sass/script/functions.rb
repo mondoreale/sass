@@ -194,6 +194,9 @@ module Sass::Script
   # \{#map_has_key map-has-key($key)}
   # : Returns whether a map has a value associated with a given key.
   #
+  # \{#keywords keywords($args)}
+  # : Returns the keywords passed to a function that takes variable arguments.
+  #
   # ## Introspection Functions
   #
   # \{#feature_exists feature-exists($feature)}
@@ -1861,6 +1864,11 @@ module Sass::Script
       Sass::Script::Value::Bool.new(to_h(map).has_key?(key))
     end
     declare :map_has_key, [:map, :key]
+
+    def keywords(args)
+      assert_type args, :ArgList
+      Sass::Script::Value::Map.new(Sass::Util.map_keys(args.keywords) {|k| Sass::Script::String.new(k)})
+    end
 
     # Returns one of two values, depending on whether or not `$condition` is
     # true. Just like in `@if`, all values other than `false` and `null` are
